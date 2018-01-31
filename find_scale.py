@@ -10,6 +10,23 @@ def findSIFT(img1, img2):
     keypts1, descriptors1 = detector.detectAndCompute(img1, None)
     keypts2, descriptors2 = detector.detectAndCompute(img2, None)
     return keypts1, keypts2, descriptors1, descriptors2
+
+def findSIFTMatches(descriptors1, descriptors2):
+    kdtree = 1
+    queryParams = dict(algorithm=kdtree, trees=5)
+    inputParams = dict(checks=50)
+    matcher = cv2.FlannBasedMatcher(queryParams, inputParams)
+    matches = matcher.knnMatch(descriptors1, descriptors2, k=2)
+
+
+    good_matches = []
+    for i,j in matches:
+        if(i.distance < 0.8*j.distance):
+            good_matches.append(i)
+    return good_matches
+
+
+
 # Time Section 1----------------------------------------------------------------
 time0 = time.time()
 # Define the minimum match count to be 10
@@ -24,19 +41,7 @@ time1 = time.time()
 print("Time check 1:" + str(time1-time0))
 # Time Section 2----------------------------------------------------------------
 
-kdtree = 1
-queryParams = dict(algorithm=kdtree, trees=5)
-inputParams = dict(checks=50)
-matcher = cv2.FlannBasedMatcher(queryParams, inputParams)
-matches = matcher.knnMatch(descriptors1, descriptors2, k=2)
-
-
-good_matches = []
-for i,j in matches:
-    if(i.distance < 0.8*j.distance):
-        good_matches.append(i)
-
-
+good_matches = findSIFTMatches(descriptors1, descriptors2)
 
 time2 = time.time()
 print("Time check 2:" + str(time2-time1))
