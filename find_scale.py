@@ -32,8 +32,8 @@ time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched5.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched5.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched4.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched4.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
