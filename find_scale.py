@@ -32,8 +32,8 @@ time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched4.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched4.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched5.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched5.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
@@ -48,11 +48,12 @@ print("Time check 2:" + str(time2-time1))
 # Time Section 3----------------------------------------------------------------
 queryPts = np.float32([keypts1[m.queryIdx].pt for m in good_matches]).reshape(-1,1,2)
 inputPts = np.float32([keypts2[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
-retval, mask = cv2.findHomography(queryPts, inputPts, cv2.RANSAC,5.0)
+retval, mask = cv2.findHomography(queryPts, inputPts, cv2.LMEDS, 5.0)
 matchesMask = mask.ravel().tolist()
 h,w = img1.shape
 pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 dst = cv2.perspectiveTransform(pts,retval)
+print(dst)
 cv2.rectangle(img2, (100,100), (200,200), 255, 3)
 img2_bgr = cv2.polylines(img2_bgr,[np.int32(dst)],True,(0,0,255),3, cv2.LINE_AA)
 
@@ -68,8 +69,10 @@ draw_params = dict(matchColor = (0,255,0), # draw matches in green color
 img3 = cv2.drawMatches(img1,keypts1,img2,keypts2,good_matches,None,**draw_params)
 
 time4 = time.time()
-print("Time check 2:" + str(time4-time3))
+print("Time check 4:" + str(time4-time3))
 print("Total time: " + str(time4-time0))
 
-cv2.imshow("BGR Searched Image", img2_bgr)
-plt.imshow(img3, 'gray'),plt.show()
+plt.imshow(cv2.cvtColor(img2_bgr, cv2.COLOR_BGR2RGB))
+plt.show()
+plt.imshow(img3, "gray")
+plt.show()
