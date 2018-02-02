@@ -32,8 +32,8 @@ time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched5.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched5.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched4.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched4.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
@@ -50,11 +50,17 @@ queryPts = np.float32([keypts1[m.queryIdx].pt for m in good_matches]).reshape(-1
 inputPts = np.float32([keypts2[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
 retval, mask = cv2.findHomography(queryPts, inputPts, cv2.LMEDS, 5.0)
 matchesMask = mask.ravel().tolist()
+for i in range(len(inputPts)):
+    if(matchesMask[i] == 1):
+        cv2.circle(img2_bgr, tuple(inputPts[i][0]), 5, (0,0,255), -1)
+# for pt in inputPts:
+#     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
+print("Mask: " + str(mask.shape) + ", inputPts: " + str(inputPts.shape))
+#print(inputPts[0])
 h,w = img1.shape
 pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 dst = cv2.perspectiveTransform(pts,retval)
-print(dst)
-cv2.rectangle(img2, (100,100), (200,200), 255, 3)
+#cv2.rectangle(img2, (100,100), (200,200), 255, 3)
 img2_bgr = cv2.polylines(img2_bgr,[np.int32(dst)],True,(0,0,255),3, cv2.LINE_AA)
 
 time3 = time.time()
