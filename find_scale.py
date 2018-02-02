@@ -50,14 +50,19 @@ queryPts = np.float32([keypts1[m.queryIdx].pt for m in good_matches]).reshape(-1
 inputPts = np.float32([keypts2[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
 retval, mask = cv2.findHomography(queryPts, inputPts, cv2.LMEDS, 5.0)
 matchesMask = mask.ravel().tolist()
+maskedPts = np.array([-1,-1])
 for i in range(len(inputPts)):
     if(matchesMask[i] == 1):
         cv2.circle(img2_bgr, tuple(inputPts[i][0]), 5, (0,0,255), -1)
+        maskedPts = np.vstack((maskedPts,inputPts[i][0]))
+maskedPts = maskedPts[1:]
+print(maskedPts)
 # for pt in inputPts:
 #     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
 print("Mask: " + str(mask.shape) + ", inputPts: " + str(inputPts.shape))
 #print(inputPts[0])
 h,w = img1.shape
+print("h: " + str(h) + " w: " + str(w))
 pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 dst = cv2.perspectiveTransform(pts,retval)
 #cv2.rectangle(img2, (100,100), (200,200), 255, 3)
