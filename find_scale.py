@@ -32,8 +32,8 @@ time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched3.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched3.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched5.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched5.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
@@ -56,9 +56,9 @@ for i in range(len(inputPts)):
         #cv2.circle(img2_bgr, tuple(inputPts[i][0]), 5, (0,0,255), -1)
         maskedPts = np.vstack((maskedPts,inputPts[i][0]))
 maskedPts = maskedPts[1:]
-rectPt1_arr = np.amin(maskedPts, axis=0)
+rectPt1_arr = np.nanmin(maskedPts, axis=0)
 rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
-rectPt2_arr = np.amax(maskedPts, axis=0)
+rectPt2_arr = np.nanmax(maskedPts, axis=0)
 rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
 #print(maskedPts)
 # for pt in inputPts:
@@ -73,7 +73,7 @@ dst = cv2.perspectiveTransform(pts,retval)
 cv2.rectangle(img2_bgr, rectPt1, rectPt2, (0, 255, 0), 3)
 
 time3 = time.time()
-print("Time check 2:" + str(time3-time2))
+print("Time check 3:" + str(time3-time2))
 # Time Section 4----------------------------------------------------------------
 
 draw_params = dict(matchColor = (0,255,0), # draw matches in green color
