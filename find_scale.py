@@ -32,8 +32,8 @@ time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched4.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched4.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched3.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched3.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
@@ -53,20 +53,24 @@ matchesMask = mask.ravel().tolist()
 maskedPts = np.array([-1,-1])
 for i in range(len(inputPts)):
     if(matchesMask[i] == 1):
-        cv2.circle(img2_bgr, tuple(inputPts[i][0]), 5, (0,0,255), -1)
+        #cv2.circle(img2_bgr, tuple(inputPts[i][0]), 5, (0,0,255), -1)
         maskedPts = np.vstack((maskedPts,inputPts[i][0]))
 maskedPts = maskedPts[1:]
-print(maskedPts)
+rectPt1_arr = np.amin(maskedPts, axis=0)
+rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
+rectPt2_arr = np.amax(maskedPts, axis=0)
+rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
+#print(maskedPts)
 # for pt in inputPts:
 #     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
-print("Mask: " + str(mask.shape) + ", inputPts: " + str(inputPts.shape))
+#print("Mask: " + str(mask.shape) + ", inputPts: " + str(inputPts.shape))
 #print(inputPts[0])
+
 h,w = img1.shape
 print("h: " + str(h) + " w: " + str(w))
 pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
 dst = cv2.perspectiveTransform(pts,retval)
-#cv2.rectangle(img2, (100,100), (200,200), 255, 3)
-img2_bgr = cv2.polylines(img2_bgr,[np.int32(dst)],True,(0,0,255),3, cv2.LINE_AA)
+cv2.rectangle(img2_bgr, rectPt1, rectPt2, (0, 255, 0), 3)
 
 time3 = time.time()
 print("Time check 2:" + str(time3-time2))
