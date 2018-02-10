@@ -19,21 +19,34 @@ def findSIFTMatches(descriptors1, descriptors2):
     matches = matcher.knnMatch(descriptors1, descriptors2, k=2)
 
 
-    good_matches = []
+    goodMatches = []
     for i,j in matches:
         if(i.distance < 0.8*j.distance):
-            good_matches.append(i)
-    return good_matches
+            goodMatches.append(i)
+    return goodMatches
 
 
+
+def findOutliers(data):
+    avg = np.nanmean(data, axis=0)
+    stdev = np.nanstd(data, axis=0)
+    dataRangeX = (avg[0]-2*stdev[0], avg[0]+2*stdev[0])
+    dataRangeY = (avg[1]-2*stdev[1], avg[1]+2*stdev[1])
+    goodData = np.array([-1,-1])
+    outliers = np.array([-1,-1])
+    for pt in data:
+        if( (pt[0][0] > dataRange[0]) and (pt[0][1] < dataRange[1]) ):
+            if( (pt[0][1] > dataRange[1]) and (pt[0][1] < dataRange[1]) ):
+                goodData = np.vstack((goodData, pt))
+    return goodData
 
 # Time Section 1----------------------------------------------------------------
 time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched5.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched5.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched4.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched4.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
@@ -41,13 +54,13 @@ time1 = time.time()
 print("Time check 1:" + str(time1-time0))
 # Time Section 2----------------------------------------------------------------
 
-good_matches = findSIFTMatches(descriptors1, descriptors2)
+goodMatches = findSIFTMatches(descriptors1, descriptors2)
 
 time2 = time.time()
 print("Time check 2:" + str(time2-time1))
 # Time Section 3----------------------------------------------------------------
-queryPts = np.float32([keypts1[m.queryIdx].pt for m in good_matches]).reshape(-1,1,2)
-inputPts = np.float32([keypts2[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
+queryPts = np.float32([keypts1[m.queryIdx].pt for m in goodMatches]).reshape(-1,1,2)
+inputPts = np.float32([keypts2[m.trainIdx].pt for m in goodMatches]).reshape(-1,1,2)
 retval, mask = cv2.findHomography(queryPts, inputPts, cv2.LMEDS, 5.0)
 matchesMask = mask.ravel().tolist()
 maskedPts = np.array([-1,-1])
@@ -60,6 +73,7 @@ rectPt1_arr = np.nanmin(maskedPts, axis=0)
 rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
 rectPt2_arr = np.nanmax(maskedPts, axis=0)
 rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
+
 #print(maskedPts)
 # for pt in inputPts:
 #     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
@@ -76,12 +90,12 @@ time3 = time.time()
 print("Time check 3:" + str(time3-time2))
 # Time Section 4----------------------------------------------------------------
 
-draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+params = dict(matchColor = (0,255,0), # draw matches in green color
                    singlePointColor = None,
                    matchesMask = matchesMask, # draw only inliers
                    flags = 2)
 
-img3 = cv2.drawMatches(img1,keypts1,img2,keypts2,good_matches,None,**draw_params)
+img3 = cv2.drawMatches(img1,keypts1,img2,keypts2,goodMatches,None,**params)
 
 time4 = time.time()
 print("Time check 4:" + str(time4-time3))
