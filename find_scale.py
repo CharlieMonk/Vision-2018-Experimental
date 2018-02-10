@@ -35,10 +35,11 @@ def findOutliers(data):
     goodData = np.array([-1,-1])
     outliers = np.array([-1,-1])
     for pt in data:
-        if( (pt[0][0] > dataRange[0]) and (pt[0][1] < dataRange[1]) ):
-            if( (pt[0][1] > dataRange[1]) and (pt[0][1] < dataRange[1]) ):
+        print("Pt : " + str(pt))
+        if( (pt[0] > dataRangeX[0]) and (pt[0] < dataRangeX[1]) ):
+            if( (pt[1] > dataRangeY[0]) and (pt[1] < dataRangeY[1]) ):
                 goodData = np.vstack((goodData, pt))
-    return goodData
+    return goodData[1:]
 
 # Time Section 1----------------------------------------------------------------
 time0 = time.time()
@@ -74,6 +75,7 @@ rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
 rectPt2_arr = np.nanmax(maskedPts, axis=0)
 rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
 
+maskedPts = findOutliers(maskedPts)
 #print(maskedPts)
 # for pt in inputPts:
 #     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
