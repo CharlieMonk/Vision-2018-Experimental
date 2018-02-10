@@ -30,12 +30,11 @@ def findSIFTMatches(descriptors1, descriptors2):
 def findOutliers(data):
     avg = np.nanmean(data, axis=0)
     stdev = np.nanstd(data, axis=0)
-    dataRangeX = (avg[0]-2*stdev[0], avg[0]+2*stdev[0])
+    dataRangeX = (avg[0]-3*stdev[0], avg[0]+3*stdev[0])
     dataRangeY = (avg[1]-2*stdev[1], avg[1]+2*stdev[1])
     goodData = np.array([-1,-1])
     outliers = np.array([-1,-1])
     for pt in data:
-        print("Pt : " + str(pt))
         if( (pt[0] > dataRangeX[0]) and (pt[0] < dataRangeX[1]) ):
             if( (pt[1] > dataRangeY[0]) and (pt[1] < dataRangeY[1]) ):
                 goodData = np.vstack((goodData, pt))
@@ -70,12 +69,12 @@ for i in range(len(inputPts)):
         #cv2.circle(img2_bgr, tuple(inputPts[i][0]), 5, (0,0,255), -1)
         maskedPts = np.vstack((maskedPts,inputPts[i][0]))
 maskedPts = maskedPts[1:]
-rectPt1_arr = np.nanmin(maskedPts, axis=0)
+goodData = findOutliers(maskedPts)
+rectPt1_arr = np.nanmin(goodData, axis=0)
 rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
-rectPt2_arr = np.nanmax(maskedPts, axis=0)
+rectPt2_arr = np.nanmax(goodData, axis=0)
 rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
 
-maskedPts = findOutliers(maskedPts)
 #print(maskedPts)
 # for pt in inputPts:
 #     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
