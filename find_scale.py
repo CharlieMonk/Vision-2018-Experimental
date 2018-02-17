@@ -41,16 +41,18 @@ def findOutliers(data):
     return goodData[1:]
 
 def findRectPts(data):
+    # This function makes the bounding box symmetric around the scale
     rectPt1_arr = np.nanmin(goodData, axis=0)
     rectPt2_arr = np.nanmax(goodData, axis=0)
     middle = np.nanmean(goodData, axis=0)[0]
+    # Find the distance from the scale center to each low and high point
     dist1 = (rectPt2_arr[0] - middle)*((rectPt2_arr[0] - middle)>0)
     dist2 = (middle - rectPt1_arr[0])*((middle - rectPt1_arr[0])>0)
-    print("Dist1: " + str(dist1) + " Dist2: " + str(dist2))
-    if(dist1>dist2):
-        rectPt1_arr[0] -= dist1-dist2
-    elif(dist2>dist1):
-        rectPt2_arr[0] += dist2-dist1
+    #print("Dist1: " + str(dist1) + " Dist2: " + str(dist2))
+    # Adjust the bounding box points to be symmetric
+    rectPt1_arr[0] -= (dist1-dist2)*(dist1>dist2)
+    rectPt2_arr[0] += (dist2-dist1)*(dist2>dist1)
+    # Convert the pts to ints so OpenCV can draw a rect with them
     rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
     rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
     return rectPt1, rectPt2
