@@ -30,7 +30,7 @@ def findSIFTMatches(descriptors1, descriptors2):
 def findOutliers(data):
     avg = np.nanmean(data, axis=0)
     stdev = np.nanstd(data, axis=0)
-    dataRangeX = (avg[0]-2*stdev[0], avg[0]+2*stdev[0])
+    dataRangeX = (avg[0]-3*stdev[0], avg[0]+3*stdev[0])
     dataRangeY = (avg[1]-2*stdev[1], avg[1]+2*stdev[1])
     goodData = np.array([-1,-1])
     outliers = np.array([-1,-1])
@@ -42,12 +42,15 @@ def findOutliers(data):
 
 def findRectPts(data):
     rectPt1_arr = np.nanmin(goodData, axis=0)
-    rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
     rectPt2_arr = np.nanmax(goodData, axis=0)
-    rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
-    middle = (rectPt1_arr[0] + rectPt2_arr[0])/2
-    rectPt1_arr[0] -= (middle - rectPt1_arr[0])*((middle - rectPt1_arr[0])>0)
-    rectPt2_arr[0] += (rectPt2_arr[0] - middle)*((rectPt2_arr[0] - middle)>0)
+    middle = np.nanmean(goodData, axis=0)[0]
+    dist1 = (rectPt2_arr[0] - middle)*((rectPt2_arr[0] - middle)>0)
+    dist2 = (middle - rectPt1_arr[0])*((middle - rectPt1_arr[0])>0)
+    print("Dist1: " + str(dist1) + " Dist2: " + str(dist2))
+    if(dist1>dist2):
+        rectPt1_arr[0] -= dist1-dist2
+    elif(dist2>dist1):
+        rectPt2_arr[0] += dist2-dist1
     rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
     rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
     return rectPt1, rectPt2
@@ -57,8 +60,8 @@ time0 = time.time()
 # Define the minimum match count to be 10
 # Read the images
 img1 = cv2.imread('/Users/cbmonk/Downloads/query2.png',0)          # queryImage
-img2 = cv2.imread('/Users/cbmonk/Downloads/searched5.png',0) # trainImage
-img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched5.png')
+img2 = cv2.imread('/Users/cbmonk/Downloads/searched4.png',0) # trainImage
+img2_bgr = cv2.imread('/Users/cbmonk/Downloads/searched4.png')
 
 keypts1, keypts2, descriptors1, descriptors2 = findSIFT(img1, img2)
 
@@ -86,7 +89,7 @@ rectPt1_arr = np.nanmin(goodData, axis=0)
 rectPt1 = (int(rectPt1_arr[0]), int(rectPt1_arr[1]))
 rectPt2_arr = np.nanmax(goodData, axis=0)
 rectPt2 = (int(rectPt2_arr[0]), int(rectPt2_arr[1]))
-
+rectPt1, rectPt2 = findRectPts(goodData)
 #print(maskedPts)
 # for pt in inputPts:
 #     cv2.circle(img2_bgr, tuple(pt[0]), 5, (0,0,255), -1)
