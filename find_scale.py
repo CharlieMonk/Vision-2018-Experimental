@@ -2,6 +2,13 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 import time
+
+def searchImage(img, query):
+    alg = eval("cv2.TM_CCOEFF")
+    res = cv2.matchTemplate(img, query, alg)
+    start_pt = cv2.minMaxLoc(res)[3]
+    return start_pt
+
 img_path = "/Users/cbmonk/Downloads/searched4.png"
 img = cv2.imread(img_path, 0)
 bgr_img = cv2.imread( img_path )
