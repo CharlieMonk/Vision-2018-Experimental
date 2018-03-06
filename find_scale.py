@@ -13,7 +13,7 @@ def findScale(img_path):
     img = cv2.imread(img_path, 0)
     #img = cv2.flip(img, -1)
     bgr_img = cv2.imread( img_path )
-    query = cv2.imread("/Users/cbmonk/Downloads/query2.png", 0)
+    query = cv2.imread("/Users/cbmonk/AnacondaProjects/Vision-2018-Experimental/test-images/query2.png", 0)
     w, h = img.shape[::-1]
     # All the 6 algorithms for comparison in a list
     time0 = time.time()
@@ -31,5 +31,5 @@ def findScale(img_path):
     cv2.waitKey(0)
 
 if __name__ == "__main__":
-    for i in range(8,9):
-        findScale("/Users/cbmonk/Downloads/searched"+str(i)+".png")
+    for i in range(1,7):
+        findScale("/Users/cbmonk/AnacondaProjects/Vision-2018-Experimental/test-images/searched"+str(i)+".png")

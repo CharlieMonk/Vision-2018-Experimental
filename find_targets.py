@@ -161,7 +161,7 @@ def logImage(bgr_img, folder, ranOnce):
         # Return the filepath so it can be stored outside this scope
         return os.path.join(folder, logging_folder)
     return folder
-if __name__ == "__main__":
+def main():
     while(True):
         time0 = time.time()
         # Read the frame from the video capture
@@ -203,6 +203,12 @@ if __name__ == "__main__":
         # Exit the loop when q is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        print("Main crashed for some reason")
 
 # Release the video capture and close the windows when q is pressed
 video_capture.release()
