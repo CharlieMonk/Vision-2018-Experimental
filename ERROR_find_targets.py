@@ -161,7 +161,7 @@ def logImage(bgr_img, folder, ranOnce):
         # Return the filepath so it can be stored outside this scope
         return os.path.join(folder, logging_folder)
     return folder
-if __name__ == "__main__":
+def main():
     while(True):
         time0 = time.time()
         # Read the frame from the video capture
@@ -182,10 +182,8 @@ if __name__ == "__main__":
         # retro_hsv_lower = np.array([0, 0, 255])
         # retro_hsv_upper = np.array([0, 0, 255])
         # Enable the below values if LEDs are NOT bright enough
-        # retro_hsv_lower = np.array([87, 155, 230])
-        # retro_hsv_upper = np.array([95, 200, 255])
-        retro_hsv_lower = np.array([46, 125, 171])
-        retro_hsv_upper = np.array([57, 255, 255])
+        retro_hsv_lower = np.array([46, 225, 171])
+        retro_hsv_upper = np.array([54, 255, 255])
         retro_dilate = removeNoise(hsv_img, (5,5), retro_hsv_lower, retro_hsv_upper)
         retro_img = findObject(retro_dilate, "retroreflective")
 
@@ -205,6 +203,12 @@ if __name__ == "__main__":
         # Exit the loop when q is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        print("Main crashed for some reason")
 
 # Release the video capture and close the windows when q is pressed
 video_capture.release()
