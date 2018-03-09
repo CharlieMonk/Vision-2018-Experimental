@@ -95,12 +95,14 @@ def reduceExposure():
     zero = "v4l2-ctl --device=/dev/video0 -c gain_automatic=0 -c "
     one = "white_balance_automatic=0 -c exposure=5 -c gain=0 -c "
     two = "auto_exposure=1 -c brightness=0 -c hue=-32 -c saturation=96"
-    cmd = zero + one + two
-    os.system(cmd)
+    cmd0 = zero + one + two
+    print("cmd:", cmd0)
+    os.system(cmd0)
     zero = "v4l2-ctl --device=/dev/video0 -c gain_automatic=0 -c "
-    one = "w_balance_automatic=0 -c exposure=5"
-    cmd = zero + one
-    os.system(cmd)
+    one = "white_balance_automatic=0 -c exposure=5"
+    cmd1 = zero + one
+    print(cmd1)
+    os.system(cmd1)
 
 # Set up a counter, for use in logging images
 counter = 0
