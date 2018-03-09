@@ -112,6 +112,15 @@ for arg in sys.argv:
             isTesting = True
         else:
             folder = "/var/log/Vision"
+            zero = "v4l2-ctl --device=/dev/video0 -c gain_automatic=0 -c "
+            one = "white_balance_automatic=0 -c exposure=5 -c gain=0 -c "
+            two = "auto_exposure=1 -c brightness=0 -c hue=-32 -c saturation=96"
+            cmd = zero + one + two
+            os.system(cmd)
+            zero = "v4l2-ctl --device=/dev/video0 -c gain_automatic=0 -c "
+            one = "w_balance_automatic=0 -c exposure=5"
+            cmd = zero + one
+            os.system(cmd)
     if(arg == "displayimages"):
         displayImages = True
     if(arg == "nopackets"):
