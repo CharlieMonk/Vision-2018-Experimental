@@ -74,9 +74,12 @@ def findObject(dilate, objName):
 
 def getAngle(center_point):
     # Use the center_point, fov, and width to find the heading (angle to target)
+    offset = 37
+    point = center_point[0] + offset
     field_of_view = 65
-    pixel_distance = center_point[0] - frame_width/2
+    pixel_distance = point - frame_width/2
     heading = ((field_of_view/2.0) * pixel_distance)/(frame_width/2)
+    print(pixel_distance)
     return int(heading)
 
 def sendData(angle, width, objName):
@@ -215,7 +218,7 @@ if __name__ == "__main__":
         # Keep track of how many times the program has run (for image logging)
         counter+=1
         ranOnce = True
-        print(time.time()-time0)
+        #print(time.time()-time0)
         # Exit the loop when q is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
