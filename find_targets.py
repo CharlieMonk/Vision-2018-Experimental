@@ -74,8 +74,8 @@ def findObject(dilate, objName):
 
 def getAngle(center_point):
     # Use the center_point, fov, and width to find the heading (angle to target)
-    offset = 37
-    point = center_point[0] + offset
+    offset = 90 #37
+    point = center_point[0] - offset
     field_of_view = 65
     pixel_distance = point - frame_width/2
     heading = ((field_of_view/2.0) * pixel_distance)/(frame_width/2)
@@ -154,6 +154,7 @@ video_capture.set(cv2.CAP_PROP_FPS, 10)
 # Find the resolution of the webcam input
 _, bgr_img = video_capture.read()
 _, frame_width, _ = bgr_img.shape
+print(frame_width)
 # print("----"+"\n\n\nWidth: " + str(width)+"\n\n\n----")
 
 def logImage(bgr_img, folder, ranOnce):
