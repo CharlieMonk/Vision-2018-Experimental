@@ -65,7 +65,7 @@ def findObject(dilate, objName):
             angle = getAngle(center_point)
             print(objName + ": " + str(angle))
             # If the program isn't in testing mode, send data to RoboRIO
-            if(sendPackets) and (objName == "cube"):
+            if(sendPackets):
                 sendData(angle, width, objName)
             # Show the images
             if(displayImages):
@@ -149,8 +149,9 @@ if(sendPackets):
             channel = UDPChannel(remote_ip=rio_ip, remote_port=5880,
                                  local_ip='0.0.0.0', local_port=5888,
                                  timeout_in_seconds=0.001)
-        except:
-            print("Error creating UDP Channel.")
+        except Exception as e:
+            print("Error creating UDP Channel.", e)
+
             time.sleep(1)
 
 # Set up the webcam input
