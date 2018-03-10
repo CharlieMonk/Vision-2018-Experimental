@@ -119,16 +119,21 @@ isTesting = False
 displayImages = False
 # Should packets be sent?
 sendPackets = True
+# Should exposure be reduced?
+shouldReduceExposure = True
 # If test is found in the cmd line arguments, then the program is testing
 for arg in sys.argv:
     if(not isTesting):
+        if(arg == "cube"):
+            shouldReduceExposure = False
         if(arg == "test"):
             # When testing, use an alternate filepath
             folder = "/Users/cbmonk/Downloads/ImageLogging/"
             isTesting = True
         else:
             folder = "/var/log/Vision"
-            reduceExposure()
+            if(shouldReduceExposure):
+                reduceExposure()
     if(arg == "displayimages"):
         displayImages = True
     if(arg == "nopackets"):
